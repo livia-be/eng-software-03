@@ -208,127 +208,62 @@ async function pergunta(texto: string) { // funcao faz uma pergunta e retorna a 
 	}
 }
 
-async function criar_conta() {
-	var tipo: any = await pergunta('1 para Conta Corrente, 2 para Conta Poupanca: ')
-	if (tipo == 1) {
-		var numero: any = await pergunta('Numero da conta: ')
-		numero = numero.toString() // transformar em string
-		var valor: any = await pergunta('Saldo inicial: ')
-		valor = +valor // transformar em numero 
-		return (new Conta(numero, valor))
-	} else if (tipo == 2) {
-		var numero: any = await pergunta('Numero da conta: ')
-		numero = numero.toString() // transformar em string
-		var valor: any = await pergunta('Saldo inicial: ')
-		valor = +valor // transformar em numero
-		var taxa: any = await pergunta('Definir taxa de juros ( Mínimo 0.1 ): ')
-		taxa = +taxa // transformar em numero
-		if (taxa <= 0) {
-			throw new AplicacaoError('Valor de Taxa inválido')
-		}
-		else {
-			return (new Poupanca(numero, valor, taxa))
-		}
-	} else { throw new AplicacaoError('Opção inválida de tipo de conta.') }
-}
-
-async function pegar_numero() {
-	var numero: any = await pergunta('Numero da conta: ')
-	numero = numero.toString() // transformar em string
-	return numero
-}
-
-async function pegar_valor() {
-	var valor: any = await pergunta('Valor: ')
-	valor = +valor // transformar em numero
-	return valor
-}
-
 const main = async () => {
 	do {
 		//exibir menu com opções
 		try {
 			//ler uma opção pelo teclado"
-			console.log("(1) Criar conta\n(2) Listar todas as contas\n(3) Listar conta por numero\n(4) Sacar\n(5) Depositar\n(6) Transferir\n(7) Alterar\n(8) Deletar conta\n(9) Render juros\n(0) Sair") // listando o menu
+			console.log("(1) Criar conta\n(2) Listar todas as contas\n(3) Listar conta por numero\n(4) Sacar\n(5) Depositar\n(6) Transferir\n(7) Alterar\n(8) Deletar conta") // listando o menu
 			opcao = await pergunta('Selecione: ') // perguntando a opcao, await pra o programa esperar a resposta
 			switch (opcao) {
 				case "1":
 					// opção cadastrar... (C)
-					banco.inserir(await criar_conta())
-					console.clear()
+					let numero: any = await pergunta('Numero da conta: ')
+					numero = numero.toString() // transformar em string
+					let saldo_inicial: any = await pergunta('Saldo inicial: ')
+					saldo_inicial = +saldo_inicial // transformar em numero 
+					banco.inserir(new Conta(numero, saldo_inicial))
 					break
 				case "2":
 					// listar todos (R)
 					console.log(banco.getContas())
 					await pergunta('... Pressione qualquer tecla para continuar ...')
-					console.clear()
 					break
 				case "3":
 					// listar por numero (R)
-					var numero: any = await pegar_numero()
+					numero = await pergunta('Numero da conta: ')
+					numero = numero.toString() // transformar em string
 					console.log(banco.consultar(numero))
 					await pergunta('... Pressione qualquer tecla para continuar ...')
-					console.clear()
 					break
 				case "4":
 					// Sacar (U)
-					numero = await pegar_numero()
-					var valor: any = await pegar_valor()
-					banco.sacar(numero, valor)
-					console.clear()
 					break
 				case "5":
 					// Depositar (U)
-					numero = await pegar_numero()
-					valor = await pegar_valor()
-					banco.depositar(numero, valor)
-					console.clear()
 					break
 				case "6":
 					// Transferir (U)
-					console.log("--Conta a debitar--")
-					var num_conta1: any = await pegar_numero()
-					console.log("--Conta a creditar--")
-					var num_conta2: any = await pegar_numero()
-					valor = await pegar_valor()
-					banco.transferir(num_conta1, num_conta2, valor)
-					console.clear()
 					break
 				case "7":
 					// Alterar (U)
-					var conta_a_alterar: any = await criar_conta()
-					banco.alterar(conta_a_alterar)
-					console.clear()
 					break
 				case "8":
 					// Exclutir (DE)
-					numero = await pegar_numero()
-					banco.excluir(numero)
-					console.clear()
 					break
-				case "9":
-					// render juros
-					numero = await pegar_numero()
-					banco.renderJuros(numero)
-					console.clear()
-					break
-				case "0":
-					process.exit(1)
 			}
 		} catch (e: any) {
 			if (e instanceof AplicacaoError) {
-				console.log("###########\nMensagem de erro: " + e.message);
+				console.log(e.message);
 			}
 			//... outros ifs ou elses
 			if (e instanceof Error) {
-				console.log("\nErro no sistema. Contate o administrador.\n###########");
-				await pergunta('... Pressione qualquer tecla para continuar ...')
-				console.clear()
+				console.log("###########\nErro no sistema. Contate o administrador.\n###########");
 			}
 		} finally {
-			console.log("Operação finalizada.");
+			console.log("Operação finalizada. Digite 9 para sair");
 		}
-	} while (opcao != "0");
+	} while (opcao != "9");
 	rl.close()
 	console.log("Aplicação encerrada");
 }

@@ -1,0 +1,8 @@
+q1-  Uma classe abstrata não pode ser instanciada, apenas herdada. 
+Sendo assim, uma classe abstrata não pode ter um objeto criado a partir de sua instanciação. Elas idealizam um tipo de forma generica 
+ e sozinhas não possuem um uso real no sistema, assim é necessário que sejam estendidas para que seus métodos sejam usados.
+
+ q2- Ela precis aimplementar os métodos da função abstrata.
+
+ q3-quando uma classe que herda de uma abstrata  não implementa os seus métodos acontece um erro (ts2515) Se derivarmos uma classe de uma 
+  abstrata, teremos que fornecer uma implementação para todos os seus abstractmembros.
